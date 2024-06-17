@@ -18,9 +18,10 @@ class CalculatorViewModel : ViewModel() {
     private val maxInputLength = 15
 
     fun onButtonClick(btn: String) {
-        Log.i("Clicked Button", btn)
+        Log.i("Clicked Button", btn) // todo для тега используется источник события, в само событие помещать в сообщение
 
         _equationText.value?.let {
+            //todo стоило сделать хотябы на when(btn){...}, а лучше отдельными методами
             if (btn == "AC") {
                 _equationText.value = ""
                 _resultText.value = "0"

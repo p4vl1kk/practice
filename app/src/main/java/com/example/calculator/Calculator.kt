@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -19,13 +20,19 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+//todo решение со строками очевидно, но неоптимально, стоило использовать enum
 val buttonList = listOf(
-    "C", "(", ")", "/",
+    "C", "(", ")", "/", // v скобки
     "7", "8", "9", "*",
     "4", "5", "6", "+",
     "1", "2", "3", "-",
     "AC", "0", ",", "=",
 )
+
+// example
+object Size{
+    val m = 8.dp
+}
 
 @Composable
 fun Calculator(
@@ -43,7 +50,7 @@ fun Calculator(
             Text(
                 text = equationText.value ?: "",
                 style = TextStyle(
-                    fontSize = 30.sp,
+                    fontSize = 30.sp, // todo лучше использовать размеры из темы MaterialTheme.typography.bodyLarge
                     textAlign = TextAlign.End
                 ),
                 maxLines = 5,
@@ -62,6 +69,7 @@ fun Calculator(
 
             Spacer(modifier = Modifier.height(10.dp))
 
+            //todo LazyVerticalGrid отлично подходит, но давай переделаем на ConstrainLayout, смысл в том чтобы понять, как им пользоваться
             LazyVerticalGrid(
                 columns = GridCells.Fixed(4),
             ) {
