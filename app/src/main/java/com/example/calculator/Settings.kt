@@ -30,7 +30,7 @@ fun SettingsDialog(
         },
         confirmButton = {
             Button(onClick = onDismiss) {
-                Text("Confirm")
+                Text("Confirm") //todo по смыслу лучше "dissmiss", "ok", "close" ?
             }
         }
     )
