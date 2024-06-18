@@ -21,12 +21,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
 import com.example.calculator.ui.SettingsDialog
 import com.example.calculator.ui.theme.CalculatorTheme
-
-//todo вибрация
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +34,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val isd = isSystemInDarkTheme()
-            var isDarkTheme by remember { mutableStateOf(isd) } //todo isDarkTheme по-умолчанию брать из настроек системы: isSystemInDarkTheme()
+            var isDarkTheme by remember { mutableStateOf(isd) }
             var showDialog by remember { mutableStateOf(false) }
 
             CalculatorTheme(darkTheme = isDarkTheme) {
@@ -45,18 +44,20 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize()
                             .padding(innerPadding)
                     ) {
-
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        //todo форматирование аргументов
-                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Start
+                        ) {
                             Button(
                                 onClick = { showDialog = true },
-                                //todo вынести размеры в отдельный объект
-                                //todo нет смысла указывать 0.dp
-                                modifier = Modifier.padding(start = 8.dp, top = 0.dp, bottom = 0.dp, end = 16.dp)
+                                modifier = Modifier.padding(
+                                    start = Padding.m,
+                                    end = Padding.m
+                                )
                             ) {
-                                Text(text = "Settings") //todo локализация строк
+                                Text(text = stringResource(R.string.settings))
                             }
                         }
 
@@ -69,7 +70,6 @@ class MainActivity : ComponentActivity() {
                     }
 
                     if (showDialog) {
-                        //todo запоминать значение isDarkTheme в настройках
                         SettingsDialog(
                             isDarkTheme = isDarkTheme,
                             onThemeChange = { isDarkTheme = it },
@@ -80,4 +80,10 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+}
+
+object Padding {
+    val m = 8.dp
+    val s = 4.dp
+    val l = 16.dp
 }

@@ -12,6 +12,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -20,18 +21,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-//todo решение со строками очевидно, но неоптимально, стоило использовать enum
-val buttonList = listOf(
-    "C", "(", ")", "/", // v скобки
-    "7", "8", "9", "*",
-    "4", "5", "6", "+",
-    "1", "2", "3", "-",
-    "AC", "0", ",", "=",
-)
-
-// example
-object Size{
-    val m = 8.dp
+enum class CalculatorButton(val symbol: String) {
+    CLEAR("C"), OPEN_PARENTHESIS("("), CLOSE_PARENTHESIS(")"), DIVIDE("/"),
+    SEVEN("7"), EIGHT("8"), NINE("9"), MULTIPLY("*"),
+    FOUR("4"), FIVE("5"), SIX("6"), ADD("+"),
+    ONE("1"), TWO("2"), THREE("3"), SUBTRACT("-"),
+    ALL_CLEAR("AC"), ZERO("0"), DECIMAL(","), EQUALS("=")
 }
 
 @Composable
@@ -49,8 +44,8 @@ fun Calculator(
         ) {
             Text(
                 text = equationText.value ?: "",
-                style = TextStyle(
-                    fontSize = 30.sp, // todo лучше использовать размеры из темы MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    fontSize = 30.sp,
                     textAlign = TextAlign.End
                 ),
                 maxLines = 5,
@@ -60,7 +55,7 @@ fun Calculator(
 
             Text(
                 text = resultText.value ?: "",
-                style = TextStyle(
+                style = MaterialTheme.typography.headlineLarge.copy(
                     fontSize = 60.sp,
                     textAlign = TextAlign.End
                 ),
@@ -69,14 +64,15 @@ fun Calculator(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            //todo LazyVerticalGrid отлично подходит, но давай переделаем на ConstrainLayout, смысл в том чтобы понять, как им пользоваться
             LazyVerticalGrid(
                 columns = GridCells.Fixed(4),
+                modifier = Modifier.fillMaxHeight()
             ) {
-                items(buttonList) { button ->
-                    CalculatorButton(btn = button, onClick = {
-                        viewModel.onButtonClick(button)
-                    })
+                items(CalculatorButton.entries) { button ->
+                    CalculatorButton(
+                        btn = button.symbol,
+                        onClick = { viewModel.onButtonClick(button.symbol) }
+                    )
                 }
             }
         }
@@ -85,9 +81,13 @@ fun Calculator(
 
 @Composable
 fun CalculatorButton(btn: String, onClick: () -> Unit) {
+    val haptic = LocalHapticFeedback.current
     Box(modifier = Modifier.padding(10.dp)) {
         FloatingActionButton(
-            onClick = onClick,
+            onClick = {
+                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                onClick()
+            },
             modifier = Modifier.size(80.dp),
             contentColor = Color.White,
             containerColor = getColor(btn)
