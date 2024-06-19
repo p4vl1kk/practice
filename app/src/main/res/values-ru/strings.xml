@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Калькулятор</string>
+    <string name="settings">Настройки</string>
+    <string name="choose_theme">Выбрать тему</string>
+    <string name="okay">Окей</string>
+</resources>

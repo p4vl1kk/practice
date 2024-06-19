@@ -63,15 +63,15 @@ fun Calculator(
             )
 
             Spacer(modifier = Modifier.height(10.dp))
-
+            //todo переделать LazyVerticalGrid на ConstraintLayout
             LazyVerticalGrid(
                 columns = GridCells.Fixed(4),
                 modifier = Modifier.fillMaxHeight()
             ) {
-                items(CalculatorButton.entries) { button ->
+                items(CalculatorButton.entries.toTypedArray()) { button ->
                     CalculatorButton(
-                        btn = button.symbol,
-                        onClick = { viewModel.onButtonClick(button.symbol) }
+                        button = button,
+                        onClick = { viewModel.onButtonClick(button) }
                     )
                 }
             }
@@ -80,7 +80,7 @@ fun Calculator(
 }
 
 @Composable
-fun CalculatorButton(btn: String, onClick: () -> Unit) {
+fun CalculatorButton(button: CalculatorButton, onClick: () -> Unit) {
     val haptic = LocalHapticFeedback.current
     Box(modifier = Modifier.padding(10.dp)) {
         FloatingActionButton(
@@ -90,18 +90,18 @@ fun CalculatorButton(btn: String, onClick: () -> Unit) {
             },
             modifier = Modifier.size(80.dp),
             contentColor = Color.White,
-            containerColor = getColor(btn)
+            containerColor = getColor(button)
         ) {
-            Text(text = btn, fontSize = 25.sp, fontWeight = FontWeight.Bold)
+            Text(text = button.symbol, fontSize = 25.sp, fontWeight = FontWeight.Bold)
         }
     }
 }
 
-fun getColor(btn: String): Color {
-    return when (btn) {
-        "C", "AC" -> Color(0xFFF44336)
-        "(", ")" -> Color.Gray
-        "/", "*", "-", "+", "=" -> Color(0xFFFF9800)
+fun getColor(button: CalculatorButton): Color {
+    return when (button) {
+        CalculatorButton.CLEAR, CalculatorButton.ALL_CLEAR -> Color(0xFFF44336)
+        CalculatorButton.OPEN_PARENTHESIS, CalculatorButton.CLOSE_PARENTHESIS -> Color.Gray
+        CalculatorButton.DIVIDE, CalculatorButton.MULTIPLY, CalculatorButton.SUBTRACT, CalculatorButton.ADD, CalculatorButton.EQUALS -> Color(0xFFFF9800)
         else -> Color(0xFF00C8C9)
     }
 }

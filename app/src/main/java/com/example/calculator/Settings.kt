@@ -1,11 +1,17 @@
 package com.example.calculator.ui
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.calculator.R
+import com.example.calculator.ThemePreference
+import com.example.calculator.ui.theme.CalculatorTheme
 
 @Composable
 fun SettingsDialog(
@@ -13,25 +19,42 @@ fun SettingsDialog(
     onThemeChange: (Boolean) -> Unit,
     onDismiss: () -> Unit
 ) {
+    val context = LocalContext.current
+
     AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(text = "Settings") },
+        onDismissRequest = { onDismiss() },
+        title = {
+            Text(text = stringResource(R.string.settings))
+        },
         text = {
             Column {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(text = "Dark Theme")
-                    Spacer(modifier = Modifier.weight(1f))
-                    Switch(
-                        checked = isDarkTheme,
-                        onCheckedChange = { onThemeChange(it) }
-                    )
-                }
+                Text(text = stringResource(R.string.choose_theme))
+                Switch(
+                    checked = isDarkTheme,
+                    onCheckedChange = {
+                        onThemeChange(it)
+                        // Сохраняем выбранную тему
+                        ThemePreference.setTheme(context, it)
+                    }
+                )
             }
         },
         confirmButton = {
-            Button(onClick = onDismiss) {
-                Text("Okay")
+            TextButton(onClick = { onDismiss() }) {
+                Text(text = stringResource(R.string.okay))
             }
         }
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewSettingsDialog() {
+    CalculatorTheme {
+        SettingsDialog(
+            isDarkTheme = false,
+            onThemeChange = {},
+            onDismiss = {}
+        )
+    }
 }
