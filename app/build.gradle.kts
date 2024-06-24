@@ -50,7 +50,8 @@ android {
 }
 
 dependencies {
-
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
     implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -60,6 +61,10 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation ("androidx.compose.ui:ui:1.2.0")
+    implementation ("androidx.compose.material3:material3:1.0.0")
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.4.0")
+    implementation ("androidx.compose.runtime:runtime-livedata:1.2.0")
     implementation("androidx.compose.runtime:runtime-livedata:1.6.7")
     implementation("org.mozilla:rhino:1.7R4")
     testImplementation(libs.junit)

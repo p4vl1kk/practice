@@ -4,6 +4,10 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.mozilla.javascript.Context
 import org.mozilla.javascript.Scriptable
 
@@ -15,7 +19,11 @@ class CalculatorViewModel : ViewModel() {
     private val _resultText = MutableLiveData("0")
     val resultText: LiveData<String> = _resultText
 
+    private val _progress = MutableLiveData(0)
+    val progress: LiveData<Int> = _progress
+
     private val maxInputLength = 15
+    private var calculationJob: Job? = null
 
     fun onButtonClick(btn: CalculatorButton) {
         Log.i("CalculatorViewModel", "Button clicked: ${btn.symbol}")
@@ -30,10 +38,27 @@ class CalculatorViewModel : ViewModel() {
         }
     }
 
+    fun startCalculation() {
+        calculationJob?.cancel()
+        calculationJob = viewModelScope.launch {
+            for (i in 1..100) {
+                delay(100)
+                _progress.value = i
+            }
+            evaluateResult()
+        }
+    }
+
+    fun cancelCalculation() {
+        calculationJob?.cancel()
+        _progress.value = 0
+    }
+
     private fun clearAll() {
         Log.i("CalculatorViewModel", "Clearing all")
         _equationText.value = ""
         _resultText.value = "0"
+        _progress.value = 0
     }
 
     private fun deleteLastCharacter() {
